@@ -28,7 +28,7 @@ router.get('/', async(req, res) => {
 router.get('/:id', async( req, res) => {
     const data = await fs.readFile(productPathFile);
     const products = JSON.parse(data);
-    const product = products.filter( p => p.productId ===  Number(req.params.id));
+    const product = products.find( p => p.productId ===  Number(req.params.id));
     if(!product) return res.status(404).json({
         "statusCode": 404,
         "status": "failure",
@@ -40,7 +40,7 @@ router.get('/:id', async( req, res) => {
         "statusCode": 200,
         "status": "sucess",
         "message": "product data found",
-        "data": product
+        "data": [product]
     });
 });
 
