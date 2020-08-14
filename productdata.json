@@ -1,0 +1,12 @@
+[{
+    "productId":1,
+    "productName": "Garden Cart",
+    "productcode": "GDN-0023",
+    "releaseDate": "March 18, 2016", 
+    "description": "15 gallon capacity rolling garden cart",
+    "price": 32.90,
+    "starRating":5,
+    "imageUrl": "https://images.homedepot-static.com/productImages/976a95ae-bb34-4cc5-ab09-56ab283ccff1/svn/bond-yard-carts-7576-64_1000.jpg"
+},
+ {}
+]
