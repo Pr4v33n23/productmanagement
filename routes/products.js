@@ -1,4 +1,3 @@
-const { json } = require('body-parser');
 const express = require('express');
 const router = express.Router();
 const fs = require('fs').promises;
@@ -28,11 +27,11 @@ router.get('/', async(req, res) => {
 router.get('/:id', async( req, res) => {
     const data = await fs.readFile(productPathFile);
     const products = JSON.parse(data);
-    const product = products.find( p => p.productId ===  Number(req.params.id));
+    const product = products.find( p => p.productId ===  parseInt(req.params.id));
     if(!product) return res.status(404).json({
         "statusCode": 404,
         "status": "failure",
-        "message": `Product with Id:${req.params.id} does not exist`,
+        "message": `product with Id:${req.params.id} does not exist`,
         "data": []
     });
 
@@ -44,5 +43,31 @@ router.get('/:id', async( req, res) => {
     });
 });
 
+//router.post()
+//router.put()
+
+router.delete('/:id', async(req, res) => {
+    const data = await fs.readFile(productPathFile);
+    const products = JSON.parse(data);
+    const product = products.find( p => p.productId === parseInt(req.params.id))
+    if(!product) return res.status(404).json({
+        "statusCode": 404,
+        "status": "failure",
+        "message": `product with Id:${req.params.id} does not exist`,
+        "data": []
+    });
+
+    const index = products.indexOf(product);
+    const deletedProduct = products.splice(index, 1);
+    if(deletedProduct) {
+        fs.writeFile(productPathFile, JSON.stringify(products));
+        return res.status(200).json({
+            "statusCode": 200,
+            "status": "Success",
+            "message": "product data removed successfully",
+            "data": [deletedProduct]    
+        });
+    }   
+});
 
 module.exports = router;
