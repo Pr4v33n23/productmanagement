@@ -2,10 +2,11 @@ const express = require('express');
 const router = express.Router();
 const fs = require('fs').promises;
 const path = require('path');
+const asyncMiddleWare = require('../middleware/async');
 const productPathFile = path.join(__dirname, '../productdata.json');
 
 //Get all products
-router.get('/', async(req, res) => {
+router.get('/', asyncMiddleWare(async(req, res) => {
     const data = await fs.readFile(productPathFile);
     const products = JSON.parse(data);
     if(products.length === 0) return res.status(404).json({
@@ -21,10 +22,10 @@ router.get('/', async(req, res) => {
         "message": "all product data",
         "data": products
     });
-});
+}));
 
 //Get product by given ID
-router.get('/:productId', async( req, res) => {
+router.get('/:productId', asyncMiddleWare (async( req, res) => {
     const data = await fs.readFile(productPathFile);
     const products = JSON.parse(data);
     const product = products.find( p => p.productId ===  parseInt(req.params.productId));
@@ -41,9 +42,9 @@ router.get('/:productId', async( req, res) => {
         "message": "product data found",
         "data": [product]
     });
-});
+}));
 
-router.post('/', async (req, res) => {
+router.post('/', asyncMiddleWare (async (req, res) => {
     const data = await fs.readFile(productPathFile);
     const products = JSON.parse(data);
     const newProduct = {
@@ -76,10 +77,10 @@ router.post('/', async (req, res) => {
             "message": "product data added successfully",
             "data": [newProduct]
     });
-});
+}));
 
 
-router.put('/:productId', async(req, res) => {
+router.put('/:productId', asyncMiddleWare(async(req, res) => {
 
     const data = await fs.readFile(productPathFile);
     const products = JSON.parse(data);
@@ -108,10 +109,10 @@ router.put('/:productId', async(req, res) => {
         "message": "product data added successfully",
         "data": [product]
     });
-});
+}));
 
 //Delete product by given ID
-router.delete('/:productId', async(req, res) => {
+router.delete('/:productId', asyncMiddleWare(async(req, res) => {
     const data = await fs.readFile(productPathFile);
     const products = JSON.parse(data);
     const product = products.find( p => p.productId === parseInt(req.params.productId));
@@ -133,6 +134,6 @@ router.delete('/:productId', async(req, res) => {
             "data": [deletedProduct]    
         });
     }   
-});
+}));
 
 module.exports = router;
