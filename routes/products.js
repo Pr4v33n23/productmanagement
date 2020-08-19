@@ -1,14 +1,12 @@
 const express = require('express');
 const router = express.Router();
-const fs = require('fs').promises;
-const path = require('path');
 const asyncMiddleWare = require('../middleware/async');
-const productPathFile = path.join(__dirname, '../productdata.json');
+const { readFromDB, writeToDB } = require('../database/db');
+
 
 //Get all products
 router.get('/', asyncMiddleWare(async(req, res) => {
-    const data = await fs.readFile(productPathFile);
-    const products = JSON.parse(data);
+    const products = await readFromDB();
     if(products.length === 0) return res.status(404).json({
         "statusCode": 404,
         "status": "failure",
@@ -26,8 +24,7 @@ router.get('/', asyncMiddleWare(async(req, res) => {
 
 //Get product by given ID
 router.get('/:productId', asyncMiddleWare (async( req, res) => {
-    const data = await fs.readFile(productPathFile);
-    const products = JSON.parse(data);
+    const products = await readFromDB();
     const product = products.find( p => p.productId ===  parseInt(req.params.productId));
     if(!product) return res.status(404).json({
         "statusCode": 404,
@@ -45,8 +42,8 @@ router.get('/:productId', asyncMiddleWare (async( req, res) => {
 }));
 
 router.post('/', asyncMiddleWare (async (req, res) => {
-    const data = await fs.readFile(productPathFile);
-    const products = JSON.parse(data);
+ 
+    const products = await readFromDB();
     const newProduct = {
     "productId": req.body.productId,
     "productName": req.body.productName,
@@ -69,7 +66,7 @@ router.post('/', asyncMiddleWare (async (req, res) => {
 
     products.push(newProduct);
 
-    fs.writeFile(productPathFile, JSON.stringify(products));
+    await writeToDB(products);
 
     res.status(201).json({
             "statusCode": 201,
@@ -82,8 +79,7 @@ router.post('/', asyncMiddleWare (async (req, res) => {
 
 router.put('/:productId', asyncMiddleWare(async(req, res) => {
 
-    const data = await fs.readFile(productPathFile);
-    const products = JSON.parse(data);
+    const products = await readFromDB();
     const product = products.find( p => p.productId === parseInt(req.params.productId));
 
     if(!product) return res.status(404).json({
@@ -101,7 +97,7 @@ router.put('/:productId', asyncMiddleWare(async(req, res) => {
     product.starRating =  req.body.starRating;
     product.imageUrl =  req.body.imageUrl;
     
-    fs.writeFile(productPathFile, JSON.stringify(products));
+    await writeToDB(products);
 
     res.status(201).json({
         "statusCode": 201,
@@ -113,8 +109,7 @@ router.put('/:productId', asyncMiddleWare(async(req, res) => {
 
 //Delete product by given ID
 router.delete('/:productId', asyncMiddleWare(async(req, res) => {
-    const data = await fs.readFile(productPathFile);
-    const products = JSON.parse(data);
+    const products = await readFromDB();
     const product = products.find( p => p.productId === parseInt(req.params.productId));
     if(!product) return res.status(404).json({
         "statusCode": 404,
@@ -126,7 +121,7 @@ router.delete('/:productId', asyncMiddleWare(async(req, res) => {
     const index = products.indexOf(product);
     const deletedProduct = products.splice(index, 1);
     if(deletedProduct) {
-        fs.writeFile(productPathFile, JSON.stringify(products));
+        await writeToDB(products);
         return res.status(200).json({
             "statusCode": 200,
             "status": "Success",

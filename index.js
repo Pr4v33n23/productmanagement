@@ -18,6 +18,7 @@ app.use(cors());
 
 
 require('./startup/routes')(app)
+require('./startup/logging')();
 
 app.listen(PORT, () => {
     console.log(

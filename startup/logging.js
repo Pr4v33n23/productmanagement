@@ -1,10 +1,12 @@
 module.exports = function() {
 
     process.on('uncaughtException', (ex) => {
-        throw ex;
+        console.error(ex);
+        process.exit(1);
     });
 
     process.on('unhandledRejection', (ex) => {
-        throw ex;
+        console.error(ex);
+        process.exit(1);
     });
 }
