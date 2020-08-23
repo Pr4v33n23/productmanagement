@@ -45,6 +45,8 @@ describe('api/products', () => {
             const res = await request(server).get(route);
             console.log(res.body);
             expect(res.status).toBe(404);
+            expect(res.body.message).toBe('no data found');
+            expect(res.body.data).toStrictEqual([]);
 
         })
         it('should return all genres', async () => {
