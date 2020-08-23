@@ -1,4 +1,4 @@
-const db = require('../database/db');
+const db = require('../../database/db');
 const fs = require('fs').promises;
 
 describe('readFromDB', () => {
@@ -17,8 +17,13 @@ describe('readFromDB', () => {
 
     });
 
-    it('should throw if readFile or JSON.parse methods throws expection', () => {
-        expect( () => { db.readFromDB().catch(exception)}).toThrow();
+    it('should throw if readFile or JSON.parse methods throws expection', async () => {
+        try {
+            await db.readFromDB();
+        }
+        catch (ex){
+            expect(ex).toThrow();
+        }
     });
 });
 
@@ -33,7 +38,12 @@ describe('writeToDB', () => {
         expect(JSON.stringify).toHaveBeenCalledWith([{}]);
     });
 
-    it('should throw if writeFile or JSON.stringify methods throws expection', () => {
-        expect( () => { db.writeToDB().catch(exception)}).toThrow();
+    it('should throw if writeFile or JSON.stringify methods throws expection', async () => {
+       try {
+            await db.writeToDB();
+       }
+       catch(ex) {
+        expect(ex).toThrow();
+       }
     });
 });

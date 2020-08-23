@@ -42,18 +42,8 @@ router.get('/:productId', asyncMiddleWare (async( req, res) => {
 }));
 
 router.post('/', asyncMiddleWare (async (req, res) => {
- 
+
     const products = await readFromDB();
-    const newProduct = {
-    "productId": req.body.productId,
-    "productName": req.body.productName,
-    "productCode": req.body.productcode,
-    "releaseDate": req.body.releaseDate, 
-    "description": req.body.description,
-    "price": req.body.price,
-    "starRating": req.body.starRating,
-    "imageUrl": req.body.imageUrl 
-    }
 
     const product = products.find( p => p.productId === parseInt( req.body.productId))
 
@@ -63,6 +53,17 @@ router.post('/', asyncMiddleWare (async (req, res) => {
         "message": `product with ID:${req.body.productId} already exists. Please provide different ID`,
         "data": []
     });
+
+    const newProduct = {
+        "productId": req.body.productId,
+        "productName": req.body.productName,
+        "productCode": req.body.productCode,
+        "releaseDate": req.body.releaseDate, 
+        "description": req.body.description,
+        "price": req.body.price,
+        "starRating": req.body.starRating,
+        "imageUrl": req.body.imageUrl 
+        }
 
     products.push(newProduct);
 

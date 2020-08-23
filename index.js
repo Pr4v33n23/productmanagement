@@ -17,11 +17,12 @@ app.use(express.urlencoded({ extended: true}));
 app.use(cors());
 
 
-require('./startup/routes')(app)
-require('./startup/logging')();
+require('./startup/routes')(app);
 
-app.listen(PORT, () => {
+const server =  app.listen(PORT, () => {
     console.log(
         `Express Server running on port ${app.get('port')} | Environment : ${app.get('env')}`
     );
 });
+
+module.exports = server;

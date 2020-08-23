@@ -1,7 +1,8 @@
 
 const fs = require('fs').promises;
 const path = require('path');
-const productPathFile = path.join(__dirname, './productdata.json');
+const config = require('config');
+const productPathFile = path.join(__dirname, config.get('db'));
 
 async function readFromDB () {
     try{
@@ -9,7 +10,7 @@ async function readFromDB () {
         return JSON.parse(data);
     }
     catch(ex){
-        throw new Error(ex.message);
+        throw ex;
     }   
 };
 
@@ -18,9 +19,10 @@ async function writeToDB(products){
         await fs.writeFile(productPathFile, JSON.stringify(products));
     }
     catch(ex){
-        throw new Error(ex.message);
+        throw ex;
     }
 };
 
 exports.readFromDB = readFromDB;
 exports.writeToDB = writeToDB;
+exports.__dirname = __dirname;
