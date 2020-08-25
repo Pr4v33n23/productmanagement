@@ -5,8 +5,9 @@ const { readFromDB, writeToDB } = require('../database/db');
 
 
 //Get all products
-router.get('/', asyncMiddleWare(async(req, res) => {
+router.get('/', asyncMiddleWare (async(req, res) => {
     const products = await readFromDB();
+    
     if(products.length === 0) return res.status(404).json({
         "statusCode": 404,
         "status": "failure",
@@ -125,7 +126,7 @@ router.delete('/:productId', asyncMiddleWare(async(req, res) => {
         await writeToDB(products);
         return res.status(200).json({
             "statusCode": 200,
-            "status": "Success",
+            "status": "success",
             "message": "product data removed successfully",
             "data": [deletedProduct]    
         });

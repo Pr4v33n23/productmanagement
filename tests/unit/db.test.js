@@ -39,11 +39,12 @@ describe('writeToDB', () => {
     });
 
     it('should throw if writeFile or JSON.stringify methods throws expection', async () => {
-       try {
+        try {
             await db.writeToDB();
-       }
-       catch(ex) {
-        expect(ex).toThrow();
-       }
+        }
+        catch(ex) {
+
+            expect(ex).toThrow();
+        }
     });
 });

@@ -43,12 +43,12 @@ describe('api/products', () => {
             await fs.writeFile(productPathFile, JSON.stringify(products));
 
             const res = await request(server).get(route);
-            console.log(res.body);
+            
             expect(res.status).toBe(404);
             expect(res.body.message).toBe('no data found');
             expect(res.body.data).toStrictEqual([]);
 
-        })
+        });
         it('should return all genres', async () => {
 
             const res = await request(server).get(route);
@@ -67,7 +67,7 @@ describe('api/products', () => {
             expect(res.body.data.productName).toBe(products.productName);
             expect(res.body.message).toBe('product data found');
         });
-        it('should return 404 if invalid id is passed', async() => {
+        it('should return 404 if given product ID does not exist', async() => {
 
             const res = await request(server).get(route + '1qwd');
             
@@ -116,5 +116,49 @@ describe('api/products', () => {
             expect(res.body.data).toStrictEqual([newProduct]);
         });
 
+        describe('PUT /', () => {
+            it('should return 404 if given product ID does not exist', async () => {
+                const res = await request(server).put(route + '4');
+
+                expect(res.status).toBe(404);
+                expect(res.body.message).toBe('product with ID:4 does not exist');
+            });
+
+            it('should return 201 if the given product ID is valid and updated', async () => {
+                const newProduct = {
+                    "productName": "Screw driver",
+                    "productCode": "SCD-0048",
+                    "releaseDate": "Feb 21, 2020",
+                    "description": "Rugged driver",
+                    "price": 7.9,
+                    "starRating": 4.4,
+                    "imageUrl": "https://images.homedepot-static.com/productImages/7a93112a-67d3-4775-8c38-9c36207c5058/svn/estwing-claw-hammers-e3-16c-64_1000.jpg"
+                }
+                const res = await request(server).put(route + '3').send(newProduct);
+
+                expect(res.status).toBe(201);
+                expect(res.body.message).toBe('product data added successfully');
+                expect(res.body.data.length).toBe(1);
+            });
+        });
+
+        describe('DELETE /', () => {
+            it('should return 404 if given product ID does not exist', async () => {
+                const res = await request(server).delete(route + '1');
+
+                expect(res.status).toBe(404);
+                expect(res.body.message).toBe('product with ID:1 does not exist');
+                expect(res.body.data).toStrictEqual([]);
+            });
+
+            it('should delete the product with given ID', async () => {
+
+                const res = await request(server).delete(route + '3');
+
+                expect(res.status).toBe(200);
+                expect(res.body.message).toBe('product data removed successfully');
+                expect(res.body.data.length).toBe(1);
+            });
+        });
     });
 });

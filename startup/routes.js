@@ -1,10 +1,9 @@
-const home = require('../routes/home');
 const products = require('../routes/products');
 const express = require('express');
+const error = require('../middleware/error');
 
 module.exports = function (app) {
     app.use(express.json());
-    app.use('/', home);
     app.use('/api/products', products);
-
+    app.use(error);
 }
